@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package fakeproto.test.v1;
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+// Address and Company demonstrate two-level practical nesting with
+// field-name heuristics (city, country, zip map to gofakeit generators).
+message Address {
+  string street = 1;
+  string city = 2;
+  string country = 3;
+  string zip = 4;
+}
+
+message Company {
+  string            name = 1;
+  Address           headquarters = 2;
+  repeated Address  offices = 3;
+}
+
+// Node is a self-referential message used to test MaxDepth enforcement.
+// With the default MaxDepth=10 the generator must stop and leave child nil
+// once the nesting limit is reached.
+message Node {
+  string                               scalar = 1;
+  repeated int32                       scalar_list = 2;
+  map<bool, Node>                      scalar_map = 3;
+  Node                                 child = 4;
+  repeated Node                        list = 5;
+  map<bool, Node>                      map = 6;
+  google.protobuf.Timestamp            wellknown = 7;
+  repeated google.protobuf.Timestamp   wellknown_list = 8;
+  map<bool, google.protobuf.Timestamp> wellknown_map = 9;
+}

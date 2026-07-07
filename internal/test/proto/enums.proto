@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package fakeproto.test.v1;
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+// Status intentionally includes a negative value (-1) to verify that fakeproto
+// selects only values declared in the descriptor, not arbitrary integers.
+// proto3 requires the first value to be zero, so STATUS_UNSPECIFIED comes first.
+enum Status {
+  reserved 2, 4;
+  reserved "STATUS_BANNED", "STATUS_ARCHIVED";
+  STATUS_UNSPECIFIED = 0;
+  STATUS_DELETED = -1;
+  STATUS_ACTIVE = 1;
+  STATUS_INACTIVE = 3;
+  STATUS_SUSPENDED = 6;
+}
+
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_MEDIUM = 2;
+  PRIORITY_HIGH = 3;
+}
+
+message WithEnum {
+  Status   status = 1;
+  Priority priority = 2;
+}
+
+message EnumCollections {
+  repeated Status              statuses = 1;
+  map<string, Priority>        priority_by_name = 2;
+}

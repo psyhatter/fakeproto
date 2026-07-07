@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      code-quality: write
+    strategy:
+      matrix:
+        go: ["1.23"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go ${{ matrix.go }}
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Cache gocover-cobertura
+        uses: actions/cache@v6
+        with:
+          path: ~/go/bin/gocover-cobertura
+          key: gocover-cobertura-v1.2.0
+
+      - name: Test with race detector and coverage
+        run: go test -race -count=1 -coverprofile=coverage.out ./...
+
+      - name: Convert coverage to Cobertura XML
+        run: |
+          which gocover-cobertura || go install github.com/boumenot/gocover-cobertura@v1.2.0
+          gocover-cobertura < coverage.out > coverage.xml
+
+      - name: Upload coverage report
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: coverage.xml
+          language: Go
+          label: code-coverage/go
+          fail-on-error: false
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.23"
+
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
+
+  generate:
+    name: Generated code is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.23"
+
+      - name: Cache protoc and protoc-gen-go
+        uses: actions/cache@v6
+        with:
+          path: bin/
+          key: protoc-${{ runner.os }}-${{ hashFiles('internal/test/generate.sh') }}
+
+      - name: Regenerate protobuf stubs
+        run: bash internal/test/generate.sh
+
+      - name: Check for diff
+        run: git diff --exit-code internal/test/gen/

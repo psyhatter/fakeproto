@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package fakeproto.test.v1;
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+// WithGroup exercises the GroupKind field kind (proto2-only). Groups are
+// encoded on the wire differently from messages but are exposed via the same
+// protoreflect.Message API, so fakeproto should fill them identically.
+message WithGroup {
+  optional group Inner = 1 {
+    optional string name = 2;
+    optional int32  value = 3;
+  }
+}

@@ -1,0 +1,67 @@
+version: "2"
+
+linters:
+  default: standard # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - copyloopvar
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - godoclint
+    - gocritic
+    - gosec
+    - lll
+    - mirror
+    - misspell
+    - modernize
+    - nilnil
+    - noctx
+    - nolintlint
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - protogetter
+    - reassign
+    - recvcheck
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+  settings:
+    errcheck:
+      check-type-assertions: false
+      check-blank: false
+    staticcheck:
+      checks: ["all"]
+    exhaustive:
+      default-signifies-exhaustive: true
+    lll:
+      line-length: 120
+    misspell:
+      locale: US
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - performance
+        - style
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+
+formatters:
+  enable:
+    - gci
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - localmodule
+
+issues:
+  max-issues-per-linter: 50
+  max-same-issues: 3
+
+run:
+  timeout: 5m
