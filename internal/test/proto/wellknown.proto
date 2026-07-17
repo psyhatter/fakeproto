@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package fakeproto.test.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+// WellKnownTypes bundles all supported google.protobuf well-known types into a
+// single message for coverage testing.
+message WellKnownTypes {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  google.protobuf.Duration  ttl = 3;
+  google.protobuf.Duration  processing_time = 4;
+
+  google.protobuf.StringValue optional_title = 5;
+  google.protobuf.Int32Value  optional_count = 6;
+  google.protobuf.BoolValue   optional_flag = 7;
+  google.protobuf.DoubleValue optional_score = 8;
+
+  google.protobuf.Struct     metadata = 9;
+  google.protobuf.ListValue  tags = 10;
+
+  // Any is filled with a random structpb.Value.
+  google.protobuf.Any       details = 11;
+  google.protobuf.FieldMask update_mask = 12;
+  google.protobuf.Value     sample_value = 13;
+}

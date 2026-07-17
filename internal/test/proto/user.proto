@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package fakeproto.test.v1;
+
+import "google/protobuf/timestamp.proto";
+import "enums.proto";
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+// User is the primary example message used in README and godoc examples.
+message User {
+  string id = 1;
+  oneof login {
+    string email = 2;
+    string phone = 4;
+  }
+  string name = 6;
+
+  Status status = 7;
+
+  google.protobuf.Timestamp created_at = 8;
+  int32  age = 9;
+  repeated string tags = 10;
+
+  reserved 3, 5;
+  reserved "phone_number", "nickname";
+}

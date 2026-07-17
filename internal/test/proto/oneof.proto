@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package fakeproto.test.v1;
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+// PaymentOneof exercises oneof with heterogeneous variants: two string scalars,
+// one int64 scalar, and one nested message.
+message PaymentOneof {
+  reserved 2, 4;
+  reserved "wire_transfer", "check_number";
+  oneof payment_method {
+    string      card_number = 1;
+    int64       bank_account = 3;
+    string      crypto_wallet = 5;
+    CashPayment cash = 6;
+  }
+}
+
+message CashPayment {
+  string currency = 1;
+  double amount = 2;
+}

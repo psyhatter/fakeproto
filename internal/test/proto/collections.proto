@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package fakeproto.test.v1;
+
+import "user.proto";
+
+option go_package = "github.com/psyhatter/fakeproto/internal/test/gen;testpb";
+
+message StringList {
+  repeated string items = 1;
+}
+
+message UserList {
+  repeated User users = 1;
+}
+
+message StringToIntMap {
+  map<string, int32> counts = 1;
+}
+
+message NestedMap {
+  map<int64, User> users_by_id = 1;
+}
+
+message OptionalFields {
+  optional int32  maybe_count = 1;
+  optional string maybe_name = 2;
+  optional bool   maybe_flag = 3;
+}
+
+// BinaryFields tests bytes generation in singular and repeated contexts.
+message BinaryFields {
+  bytes          raw = 1;
+  repeated bytes chunks = 2;
+}
