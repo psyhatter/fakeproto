@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-	_ "unsafe" // For go:linkname,
 
 	"github.com/brianvoe/gofakeit/v7"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -168,5 +167,6 @@ func checkDepthMap(
 	return maxFound
 }
 
-//go:linkname isHeavyProtoMessage github.com/psyhatter/fakeproto.isHeavyMessage
-func isHeavyProtoMessage(fd protoreflect.FieldDescriptor) bool
+func isHeavyProtoMessage(fd protoreflect.FieldDescriptor) bool {
+	return fakeproto.IsHeavyMessage(fd)
+}

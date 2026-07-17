@@ -3,7 +3,6 @@ package fakeproto
 import (
 	"fmt"
 	"time"
-	_ "unsafe" // For go:linkname,
 
 	"github.com/brianvoe/gofakeit/v7"
 	"google.golang.org/protobuf/proto"
@@ -72,8 +71,10 @@ func (fi *filler) message(m protoreflect.Message, depth int) error {
 func (fi *filler) field(m protoreflect.Message, fd protoreflect.FieldDescriptor, depth int) error {
 	// Explicit presence (proto3 optional scalar): leave unset with configured
 	// probability. Members of real oneofs also report presence but are not optional
-	// - the caller has already committed to setting this variant.
+	// - the caller has already committed to setting this variant. Proto2 required
+	// fields also report presence but must never be skipped.
 	if od := fd.ContainingOneof(); fd.HasPresence() && !isMessage(fd) &&
+		fd.Cardinality() != protoreflect.Required &&
 		(od == nil || od.IsSynthetic()) &&
 		fi.f.Float64Range(0, 1) < fi.cfg.optionalProbability {
 		return nil
@@ -355,8 +356,6 @@ func isWellKnownScalarMessage(fd protoreflect.MessageDescriptor) bool {
 // isHeavyMessage reports whether fd is a message type that adds a JSON
 // container level. Well-known scalar types (Timestamp rendered as string, etc.)
 // are "light" and do not consume depth budget.
-//
-//go:linkname isHeavyMessage
 func isHeavyMessage(fd protoreflect.FieldDescriptor) bool {
 	return isMessage(fd) && !isWellKnownScalarMessage(fd.Message())
 }

@@ -85,4 +85,4 @@ jobs:
         run: bash internal/test/generate.sh
 
       - name: Check for diff
-        run: git diff --exit-code internal/test/gen/
+        run: git diff --cached --exit-code internal/test/gen/
