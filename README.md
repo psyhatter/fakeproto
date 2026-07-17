@@ -202,7 +202,7 @@ non-deterministic.
 
 | Option                               | Default | Description                                                                                                |
 |--------------------------------------|---------|------------------------------------------------------------------------------------------------------------|
-| `WithMaxDepth(n int)`                | `10`    | Stop recursing into message fields at depth n.                                                             |
+| `WithMaxDepth(n int)`                | `5`     | Stop recursing into message fields at depth n.                                                             |
 | `WithMaxRepeated(n int)`             | `5`     | Generate at most n elements in repeated fields and maps.                                                   |
 | `WithOptionalProbability(p float64)` | `0.10`  | Probability that an explicit proto3 `optional` scalar is left unset. `0` = always set, `1` = always unset. |
 | `WithSkipOneof()`                    | -       | Leave all oneof fields unset.                                                                              |
